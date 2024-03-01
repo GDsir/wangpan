@@ -1,8 +1,15 @@
 package com.hjk.wangpan.pojo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Created by toutou on 2018/9/15.
  */
+@Data
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     private int id;
     private String username;
@@ -49,4 +56,6 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 }
