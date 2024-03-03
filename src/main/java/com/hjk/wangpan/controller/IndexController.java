@@ -17,13 +17,11 @@ import java.util.Map;
  * Created by toutou on 2018/9/15.
  */
 @RestController
-//@RequestMapping(value = "/api/")
 
 public class IndexController {
     @Autowired
     UserService userService;
 
-    //    StatusCode statusCode;
     @GetMapping("/get/users/age/{age}")
     public Map<String, Object> getUserAge(@PathVariable int age) {
         List<User> listage;
@@ -38,11 +36,6 @@ public class IndexController {
         return StatusCode.success(listage);
     }
 
-
-    //    @GetMapping("/test/get/users/id")
-//    public List<User> getUserid(int id){
-//        return userService.getUserid(id);
-//    }
     @GetMapping("/get/users/id/{id}")
     public Map<String, Object> getUserId(@PathVariable int id) {
         List<User> listid;
@@ -59,11 +52,12 @@ public class IndexController {
         return StatusCode.success(listid);
     }
 
-    //    @GetMapping("/test/get/users")
-//    public Map<String, Object> getUserAll() {
-//        List<User> list = userService.getUserAll();
-//        return StatusCode.success(list);
-//    }
+    @GetMapping("/test/get/users/id/{id}")
+    public Map<String, Object> getUserId1(@PathVariable int id) {
+        List<User> listid = userService.getUserId(id);
+        return StatusCode.success(listid);
+    }
+
     @GetMapping("/get/users")
     public Map<String, Object> getUserAll() {
 //        log.info("查询全部数据");
@@ -87,22 +81,21 @@ public class IndexController {
         return StatusCode.success(post);
     }
 
-
-//    @PostMapping("/test/post/user")
-//    public List<User> setUser(int id, String username, int age, BigInteger phone, String email) {
-//        return userService.setUser(id, username, age, phone, email);
-//    }
-
-    @GetMapping("/delete/user/username")
-    public List<User> delUser(String username) {
-        return userService.delUser(username);
+    @DeleteMapping("/delete/user/id/{id}")
+    public Map<String, Object> deleteUser(@PathVariable int id) {
+        List<User> delete;
+        try {
+            delete = userService.deleteUser(id);
+        } catch (Exception e) {
+            return StatusCode.error(1001);
+        }
+        return StatusCode.success(delete);
     }
 
     @GetMapping("/put/user/id/age")
     public List<User> altUserAge(int id, int age) {
         return userService.altUserAge(id, age);
     }
-
 
     @GetMapping("/index")
     public Map<String, String> Index() {

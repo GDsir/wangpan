@@ -20,11 +20,13 @@ public interface UserMapper {
     @Select("select * from users")
     List<User> getUserAll();
 
-    @Insert("INSERT INTO USERS VALUES (#{id},#{username},#{age},#{phone},#{email})")
-    List<User> setUser(int id, String username, int age, BigInteger phone, String email);
+//    @Insert("INSERT INTO USERS VALUES (#{id},#{username},#{age},#{phone},#{email})")
+//    List<User> setUser(int id, String username, int age, BigInteger phone, String email);
 
-    @Delete("DELETE FROM USERS WHERE USERNAME=#{username}")
-    List<User> delUser(String username);
+    //    @Delete("DELETE FROM USERS WHERE USERNAME=#{username}")
+//    List<User> delUser(String username);
+    @Delete("DELETE FROM USERS WHERE id=#{id}")
+    List<User> deleteUser(int id);
 
     @Update("UPDATE USERS SET age=#{age} WHERE id=#{id}")
     List<User> altUserAge(int id, int age);

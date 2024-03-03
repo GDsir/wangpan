@@ -38,6 +38,12 @@ public class StatusCode {
         return tmp;
     }
 
+    public static String success(String code, Object[] args) {
+        String Message;
+        Message = code;
+        return code;
+    }
+
     /**
      * @param error_code 错误代码code
      * @return

@@ -17,9 +17,10 @@ public interface UserService {
 
     List<User> getUserAll();
 
-    List<User> setUser(int id, String username, int age, BigInteger phone, String email);
+//    List<User> setUser(int id, String username, int age, BigInteger phone, String email);
 
-    List<User> delUser(String username);
+    //    List<User> delUser(String username);
+    List<User> deleteUser(int id);
 
     List<User> altUserAge(int id, int age);
 

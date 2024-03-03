@@ -35,15 +35,20 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public List<User> setUser(int id, String username, int age, BigInteger phone, String email) {
-        return userMapper.setUser(id, username, age, phone, email);
+//    @Override
+//    public List<User> setUser(int id, String username, int age, BigInteger phone, String email) {
+//        return userMapper.setUser(id, username, age, phone, email);
+//    }
+
+    //    @Override
+//    public List<User> delUser(String username) {
+//        return userMapper.delUser(username);
+//    }
+    public List<User> deleteUser(int id) {
+        return userMapper.deleteUser(id);
     }
 
-    @Override
-    public List<User> delUser(String username) {
-        return userMapper.delUser(username);
-    }
+    ;
 
     @Override
     public List<User> altUserAge(int id, int age) {
