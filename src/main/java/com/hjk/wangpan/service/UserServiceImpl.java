@@ -2,17 +2,14 @@ package com.hjk.wangpan.service;
 
 import com.hjk.wangpan.dao.UserMapper;
 import com.hjk.wangpan.pojo.User;
-import com.hjk.wangpan.utils.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by toutou on 2018/9/15.
- */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -25,44 +22,43 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUserId(int id) {
-
         return userMapper.getUserId(id);
     }
 
     @Override
     public List<User> getUserAll() {
         return userMapper.getUserAll();
-
     }
 
-//    @Override
-//    public List<User> setUser(int id, String username, int age, BigInteger phone, String email) {
-//        return userMapper.setUser(id, username, age, phone, email);
-//    }
-
-    //    @Override
-//    public List<User> delUser(String username) {
-//        return userMapper.delUser(username);
-//    }
-    public List<User> deleteUser(int id) {
+    public int deleteUser(int id) {
         return userMapper.deleteUser(id);
     }
 
-    ;
 
     @Override
-    public List<User> altUserAge(int id, int age) {
+    public int altUserAge(int id, int age) {
         return userMapper.altUserAge(id, age);
     }
 
     @Override
-    public List<User> addUser(User user) {
-        return userMapper.insert(user);
+    public int altUserName(int id, String name) {
+        return userMapper.altUserName(id, name);
     }
 
-//    @Override
-//    public List<User> list(){
-//        return userMapper.list();
-//    }
+    @Override
+    public int addUser(User user) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        user.setRegtime(date);
+        user.setLogintime(date);
+        return userMapper.insertUser(user);
+    }
+
+    public int updateUserLoginTime(int id) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        return userMapper.updateUserLoginTime(id, date);
+    }
+
 
 }

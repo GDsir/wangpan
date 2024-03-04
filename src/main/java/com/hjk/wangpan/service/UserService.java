@@ -1,14 +1,12 @@
 package com.hjk.wangpan.service;
 
 import com.hjk.wangpan.pojo.User;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by toutou on 2018/9/15.
- */
+//@Transactional(rollbackFor = Exception.class)
+
 public interface UserService {
     List<User> getUserAge(int age);
 
@@ -20,12 +18,14 @@ public interface UserService {
 //    List<User> setUser(int id, String username, int age, BigInteger phone, String email);
 
     //    List<User> delUser(String username);
-    List<User> deleteUser(int id);
+    int deleteUser(int id);
 
-    List<User> altUserAge(int id, int age);
+    int altUserAge(int id, int age);
 
+    int altUserName(int id, String name);
 
-    List<User> addUser(User user);
-//    List<User> list();
+    int addUser(User user);
+
+    int updateUserLoginTime(int id);
 
 }
