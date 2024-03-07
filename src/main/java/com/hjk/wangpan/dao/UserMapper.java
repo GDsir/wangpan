@@ -32,5 +32,4 @@ public interface UserMapper {
     @Update("update users set logintime=#{logintime} where id=#{id}")
     int updateUserLoginTime(int id, Date logintime);
 
-
 }

@@ -24,6 +24,13 @@ public class PassageController {
         return StatusCode.success(list);
     }
 
+    @GetMapping("/get/passage/id/{id}")
+    public Map<String, Object> getPassageId(@PathVariable int id) {
+        log.info("根据id查询文章");
+        List<Passage> list = passageService.getPassageId(id);
+        return StatusCode.success(list);
+    }
+
     @PostMapping("/post/passage")
     public Map<String, Object> addPassage(@RequestBody Passage passage) {
         log.info("添加文章");
@@ -39,18 +46,10 @@ public class PassageController {
     }
 
     @PutMapping("/put/passage/views/{id}")
-    public Map<String,Object> updatePostPageviews(@PathVariable int id){
+    public Map<String, Object> updatePostPageviews(@PathVariable int id) {
         log.info("浏览文章");
-        int views= passageService.updatePostPageviews(id);
+        int views = passageService.updatePostPageviews(id);
         return StatusCode.success(views);
     }
-
-    @PutMapping("/put/passage/support/{id}")
-    public Map<String,Object> updatePostPageSupport(@PathVariable int id){
-        log.info("点赞文章");
-        int support= passageService.updatePostPageSupport(id);
-        return StatusCode.success(support);
-    }
-
 
 }

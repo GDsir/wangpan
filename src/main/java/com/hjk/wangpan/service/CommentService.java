@@ -10,6 +10,8 @@ public interface CommentService {
 
     List<Comment> getCommentAll();
 
+    List<Comment> getCommentId(int id);
+
     int addComment(Comment comment);
 
     int deleteComment(int id);

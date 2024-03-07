@@ -10,11 +10,14 @@ public interface PassageService {
 
     List<Passage> getPassageAll();
 
+    List<Passage> getPassageId(int id);
+
     int addPassage(Passage passage);
 
     int deletePassage(int id);
 
     int updatePostPageviews(int id);
+
     int updatePostPageSupport(int id);
 
 }

@@ -17,8 +17,6 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class IndexController {
-
-
     @GetMapping("/index")
     public Map<String, String> Index() {
         Map map = new HashMap<String, String>();

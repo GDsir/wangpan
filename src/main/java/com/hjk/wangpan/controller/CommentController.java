@@ -27,6 +27,13 @@ public class CommentController {
         return StatusCode.success(list);
     }
 
+    @GetMapping("/get/comment/id/{id}")
+    public Map<String, Object> getCommentId(@PathVariable int id) {
+        log.info("根据id查询评论");
+        List<Comment> list = commentService.getCommentId(id);
+        return StatusCode.success(list);
+    }
+
     @PostMapping("/post/comment")
     public Map<String, Object> addComment(@RequestBody Comment comment) {
         log.info("添加评论");
@@ -42,7 +49,7 @@ public class CommentController {
     }
 
     @PutMapping("/put/comment/support/{id}")
-    public Map<String,Object> updateCmSupport(@PathVariable int id){
+    public Map<String, Object> updateCmSupport(@PathVariable int id) {
         log.info("点赞评论");
         int support = commentService.updateCmSupport(id);
         return StatusCode.success(support);

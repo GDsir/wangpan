@@ -30,7 +30,6 @@ public class UserController {
         return StatusCode.success(listid);
     }
 
-
     @GetMapping("/get/user")
     public Map<String, Object> getUserAll() {
         log.info("查询全部用户");

@@ -11,6 +11,9 @@ public interface CommentMapper {
     @Select("select * from comment")
     List<Comment> getCommentAll();
 
+    @Select("select * from comment where cmID=#{id}")
+    List<Comment> getCommentId(int id);
+
     @Insert("insert into comment(cmID,cmText,cmAudio,cmTime,cmSupport,userID,postID) values (#{cmID},#{cmText},#{cmAudio},#{cmTime},#{cmSupport},#{userID},#{postID})")
     int insertComment(Comment comment);
 

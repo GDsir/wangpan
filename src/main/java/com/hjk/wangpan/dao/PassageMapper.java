@@ -11,6 +11,9 @@ public interface PassageMapper {
     @Select("select * from passage")
     List<Passage> getPassageAll();
 
+    @Select("select * from passage where postID=#{id}")
+    List<Passage> getPassageId(int id);
+
     @Insert("insert into passage(postID,postTitle,postText,postPageviews,postAudio,postTime,postPageSupport,userID) values (#{postID},#{postTitle},#{postText},#{postPageviews},#{postAudio},#{postTime},#{postPageSupport},#{userID})")
     int insertPassage(Passage passage);
 

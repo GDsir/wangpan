@@ -5,13 +5,14 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Setter
 @Getter
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Comment {
+public class Comment implements Serializable {
     /**
      * 评论标识符
      */

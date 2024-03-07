@@ -1,10 +1,12 @@
 package com.hjk.wangpan.controller;
 
 import com.hjk.wangpan.pojo.User;
+import com.hjk.wangpan.utils.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hjk.wangpan.service.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,27 +19,27 @@ import java.util.Map;
  */
 @RestController
 public class HelloController {
+
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
+
     @GetMapping("/hello")
     public String hello() {
         return "SpringBoot";
     }
 
+    @GetMapping("/tes")
+    public String test() {
+        String test = "大傻逼,1234";
+        test = sensitiveFilter.filter(test);
+        return test;
+    }
+
     @GetMapping("/cs")
-    public Map<String,String> cs() {
-        Map<String,String> map = new HashMap<>();
-        map.put("msg","cs");
+    public Map<String, String> cs() {
+        Map<String, String> map = new HashMap<>();
+        map.put("msg", "cs");
         return map;
     }
-//    @Autowired
-//    UserService userService;
-//    @GetMapping("/show")
-//    public List<com.hjk.wangpan.pojo.User> getUser(int age){
-//        return userService.getUser(age);
-//    }
-//    @GetMapping("/showid")
-//    public List<User> getUserid(int id){
-//        return userService.getUserid(id);
-//    }
-
 
 }
