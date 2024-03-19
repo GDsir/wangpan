@@ -14,6 +14,8 @@ public interface PassageService {
 
     int addPassage(Passage passage);
 
+    int altPassage(Passage passage);
+
     int deletePassage(int id);
 
     int updatePostPageviews(int id);

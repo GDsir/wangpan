@@ -8,8 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    @Select("select * from users where age=#{age}")
-    List<User> getUserAge(int age);
 
     @Select("select * from users where id=#{id}")
     List<User> getUserId(int id);
@@ -20,14 +18,11 @@ public interface UserMapper {
     @Delete("delete from users where id=#{id}")
     int deleteUser(int id);
 
-    @Update("update users set age=#{age} where id=#{id}")
-    int altUserAge(int id, int age);
-
     @Insert("insert into users(id,username,pwd,age,sex,email,photo,usertype,regtime,logintime) values (#{id},#{username},#{pwd},#{age},#{sex},#{email},#{photo},#{usertype},#{regtime},#{logintime})")
     int insertUser(User user);
 
-    @Update("update users set username=#{username} where id=#{id}")
-    int altUserName(int id, String username);
+    @Update("update users set username=#{username},pwd=#{pwd},age=#{age},sex=#{sex},email=#{email},photo=#{photo},usertype=#{usertype},regtime=#{regtime},logintime=#{logintime} where id=#{id}")
+    int altUser(User user);
 
     @Update("update users set logintime=#{logintime} where id=#{id}")
     int updateUserLoginTime(int id, Date logintime);

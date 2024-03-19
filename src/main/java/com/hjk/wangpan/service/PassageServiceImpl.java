@@ -4,6 +4,7 @@ import com.hjk.wangpan.dao.PassageMapper;
 import com.hjk.wangpan.pojo.Passage;
 import com.hjk.wangpan.pojo.User;
 import com.hjk.wangpan.utils.SensitiveFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class PassageServiceImpl implements PassageService {
 
     @Autowired
@@ -29,6 +31,10 @@ public class PassageServiceImpl implements PassageService {
         List<Passage> passageList = (List<Passage>) redisTemplate.opsForValue().get("passagelist");
         if (null == passageList) {
             passageList = passageMapper.getPassageAll();
+            if (passageList == null) {
+                redisTemplate.opsForValue().set("passagelist", "0", 30, TimeUnit.SECONDS);
+            }
+
         }
         redisTemplate.opsForValue().set("passagelist", passageList, 30, TimeUnit.SECONDS);
         return passageList;
@@ -38,7 +44,26 @@ public class PassageServiceImpl implements PassageService {
     public List<Passage> getPassageId(int id) {
         List<Passage> passageList = (List<Passage>) redisTemplate.opsForValue().get("passagelist_" + id);
         if (null == passageList) {
-            passageList = passageMapper.getPassageId(id);
+            try {
+                boolean isLock = tryLock("passagelist_" + id);
+                while (!isLock) {
+                    Thread.sleep(50);
+                    return getPassageId(id);
+                }
+                passageList = (List<Passage>) redisTemplate.opsForValue().get("passagelist_" + id);
+                if (null == passageList){
+                    passageList = passageMapper.getPassageId(id);
+                    Thread.sleep(200);
+                    if (null == passageList) {
+                        log.info("查询无该文章");
+                        redisTemplate.opsForValue().set("passagelist_" + id, "0", 30, TimeUnit.SECONDS);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                unLock("passagelist_" + id);
+            }
         }
         redisTemplate.opsForValue().set("passagelist_" + id, passageList, 30, TimeUnit.SECONDS);
         return passageList;
@@ -57,6 +82,11 @@ public class PassageServiceImpl implements PassageService {
     }
 
     @Override
+    public int altPassage(Passage passage) {
+        return passageMapper.altPassage(passage);
+    }
+
+    @Override
     public int deletePassage(int id) {
         return passageMapper.deletePassage(id);
     }
@@ -71,4 +101,13 @@ public class PassageServiceImpl implements PassageService {
         return passageMapper.updatePostPageSupport(id);
     }
 
+    private boolean tryLock(String key) {
+        Boolean flag = redisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.SECONDS);
+        return Boolean.TRUE.equals(flag);
+    }
+
+    //释放锁
+    private void unLock(String key) {
+        redisTemplate.delete(key);
+    }
 }

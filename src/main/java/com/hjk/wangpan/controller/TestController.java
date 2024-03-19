@@ -14,7 +14,7 @@ import java.util.List;
 public class TestController {
 
     @Limit(key = "cachingTest", permitsPerSecond = 1, timeout = 500, msg = "当前排队人数较多，请稍后再试！")
-    @GetMapping("cachingTest")
+    @GetMapping("/cachingTest")
     public List<String> cachingTest() {
         log.info("------读取本地------");
         List<String> list = new ArrayList<>();

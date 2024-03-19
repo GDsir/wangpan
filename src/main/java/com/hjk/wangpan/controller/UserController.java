@@ -16,15 +16,11 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/get/user/age/{age}")
-    public Map<String, Object> getUserAge(@PathVariable int age) {
-        log.info("根据年龄查询用户");
-        List<User> listage = userService.getUserAge(age);
-        return StatusCode.success(listage);
-    }
-
     @GetMapping("/get/user/id/{id}")
     public Map<String, Object> getUserId(@PathVariable int id) {
+        if (id <= 0) {
+            return StatusCode.error("id输入错误");
+        }
         log.info("根据id查询用户");
         List<User> listid = userService.getUserId(id);
         return StatusCode.success(listid);
@@ -46,27 +42,26 @@ public class UserController {
 
     @DeleteMapping("/delete/user/id/{id}")
     public Map<String, Object> deleteUser(@PathVariable int id) {
+        if (id <= 0) {
+            return StatusCode.error("id输入错误");
+        }
         log.info("根据id删除用户");
         int delete = userService.deleteUser(id);
         return StatusCode.success(delete);
     }
 
-    @PutMapping("/put/user/id/age")
-    public Map<String, Object> altUserAge(int id, int age) {
-        log.info("根据id更改用户年龄");
-        int update = userService.altUserAge(id, age);
-        return StatusCode.success(update);
-    }
-
-    @PutMapping("/put/user/id/username")
-    public Map<String, Object> altUserName(int id, String username) {
-        log.info("根据id更改用户名字");
-        int update = userService.altUserName(id, username);
+    @PutMapping("/put/user")
+    public Map<String, Object> altUser(@RequestBody User user) {
+        log.info("根据id更改用户信息");
+        int update = userService.altUser(user);
         return StatusCode.success(update);
     }
 
     @PutMapping("/put/user/login/{id}")
     public Map<String, Object> updateUserLoginTime(@PathVariable int id) {
+        if (id <= 0) {
+            return StatusCode.error("id输入错误");
+        }
         log.info("登录，将logintime改为当前时间");
         int login = userService.updateUserLoginTime(id);
         return StatusCode.success(login);

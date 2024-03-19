@@ -8,7 +8,6 @@ import java.util.List;
 //@Transactional(rollbackFor = Exception.class)
 
 public interface UserService {
-    List<User> getUserAge(int age);
 
     List<User> getUserId(int id);
 
@@ -16,9 +15,7 @@ public interface UserService {
 
     int deleteUser(int id);
 
-    int altUserAge(int id, int age);
-
-    int altUserName(int id, String name);
+    int altUser(User user);
 
     int addUser(User user);
 

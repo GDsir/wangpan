@@ -29,6 +29,9 @@ public class CommentController {
 
     @GetMapping("/get/comment/id/{id}")
     public Map<String, Object> getCommentId(@PathVariable int id) {
+        if(id<=0){
+            return StatusCode.error("id输入错误");
+        }
         log.info("根据id查询评论");
         List<Comment> list = commentService.getCommentId(id);
         return StatusCode.success(list);
@@ -43,6 +46,9 @@ public class CommentController {
 
     @DeleteMapping("/delete/comment/{id}")
     public Map<String, Object> deleteComment(@PathVariable int id) {
+        if(id<=0){
+            return StatusCode.error("id输入错误");
+        }
         log.info("删除评论");
         int delete = commentService.deleteComment(id);
         return StatusCode.success(delete);

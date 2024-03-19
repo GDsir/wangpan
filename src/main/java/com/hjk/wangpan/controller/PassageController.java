@@ -1,6 +1,7 @@
 package com.hjk.wangpan.controller;
 
 import com.hjk.wangpan.pojo.Passage;
+import com.hjk.wangpan.pojo.User;
 import com.hjk.wangpan.service.PassageService;
 import com.hjk.wangpan.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,9 @@ public class PassageController {
 
     @GetMapping("/get/passage/id/{id}")
     public Map<String, Object> getPassageId(@PathVariable int id) {
+        if(id<=0){
+            return StatusCode.error("id输入错误");
+        }
         log.info("根据id查询文章");
         List<Passage> list = passageService.getPassageId(id);
         return StatusCode.success(list);
@@ -38,8 +42,18 @@ public class PassageController {
         return StatusCode.success(insert);
     }
 
+    @PutMapping("/put/passage")
+    public Map<String, Object> altPassage(@RequestBody Passage passage) {
+        log.info("根据id更改文章信息");
+        int update = passageService.altPassage(passage);
+        return StatusCode.success(update);
+    }
+
     @DeleteMapping("/delete/passage/{id}")
     public Map<String, Object> deletePassage(@PathVariable int id) {
+        if(id<=0){
+            return StatusCode.error("id输入错误");
+        }
         log.info("删除文章");
         int delete = passageService.deletePassage(id);
         return StatusCode.success(delete);
@@ -47,6 +61,9 @@ public class PassageController {
 
     @PutMapping("/put/passage/views/{id}")
     public Map<String, Object> updatePostPageviews(@PathVariable int id) {
+        if(id<=0){
+            return StatusCode.error("id输入错误");
+        }
         log.info("浏览文章");
         int views = passageService.updatePostPageviews(id);
         return StatusCode.success(views);

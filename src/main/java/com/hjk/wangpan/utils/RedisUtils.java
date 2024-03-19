@@ -1,5 +1,6 @@
 package com.hjk.wangpan.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -23,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtils {
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 指定缓存失效时间
@@ -154,6 +155,10 @@ public class RedisUtils {
             return false;
         }
     }
+
+    //获取锁
+
+
 
     /**
      * 递增
