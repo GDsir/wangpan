@@ -1,5 +1,6 @@
 package com.hjk.wangpan.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hjk.wangpan.pojo.User;
 import lombok.Data;
 
@@ -44,6 +45,14 @@ public class StatusCode {
         return code;
     }
 
+    public static Map<String, Object> success(JSONObject jsonObject) {
+        Map<String, Object> tmp = new HashMap<>();
+        tmp.put("status", 1);
+        tmp.put("msg", jsonObject.getString("msg"));
+        tmp.put("filename", jsonObject.getString("filename"));
+        return tmp;
+    }
+
     /**
      * @param error_code 错误代码code
      * @return
@@ -65,6 +74,14 @@ public class StatusCode {
             error_des = "服务器错误";
         }
         tmp.put("error_des", error_des);
+        return tmp;
+    }
+
+    public static Map<String, Object> error(JSONObject jsonObject) {
+        Map<String, Object> tmp = new HashMap<>();
+        tmp.put("status", 0);
+        tmp.put("msg", jsonObject.getString("msg"));
+        tmp.put("error", jsonObject.getString("error"));
         return tmp;
     }
 

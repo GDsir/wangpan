@@ -2,7 +2,10 @@ package com.hjk.wangpan.service;
 
 //import com.hjk.wangpan.config.Cacheable;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hjk.wangpan.dao.UserMapper;
+//import com.hjk.wangpan.dto.UserDTO;
 import com.hjk.wangpan.pojo.User;
 import com.hjk.wangpan.utils.SensitiveFilter;
 import com.hjk.wangpan.utils.StatusCode;
@@ -39,7 +42,7 @@ public class UserServiceImpl implements UserService {
                     return getUserId(id);
                 }
                 userList = (List<User>) redisTemplate.opsForValue().get("userlist_" + id);
-                if (null == userList){
+                if (null == userList) {
                     userList = userMapper.getUserId(id);
                     Thread.sleep(200);
                     if (null == userList) {
@@ -92,11 +95,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateUserLoginTime(int id) {
+    public int updateUserLoginTime(String username) {
         LocalDateTime localDateTime = LocalDateTime.now();
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        return userMapper.updateUserLoginTime(id, date);
+        return userMapper.updateUserLoginTime(username, date);
     }
+
+    @Override
+    public int isUser(String username) {
+        List<User> userList = (List<User>) redisTemplate.opsForValue().get("userlist_" + username);
+        if (null == userList) {
+            try {
+                boolean isLock = tryLock("user_" + username);
+                while (!isLock) {
+                    Thread.sleep(50);
+                    return isUser(username);
+                }
+                userList = (List<User>) redisTemplate.opsForValue().get("userlist_" + username);
+                if (null == userList) {
+                    userList = userMapper.getUserUsername(username);
+                    Thread.sleep(200);
+                    if (null == userList) {
+                        log.info("查无用户名");
+                        return 0;
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                unLock("user_" + username);
+            }
+        }
+        redisTemplate.opsForValue().set("userlist_" + username, userList, 30, TimeUnit.SECONDS);
+
+        return 1;
+    }
+
 
     private boolean tryLock(String key) {
         Boolean flag = redisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.SECONDS);
@@ -107,5 +141,6 @@ public class UserServiceImpl implements UserService {
     private void unLock(String key) {
         redisTemplate.delete(key);
     }
+
 
 }

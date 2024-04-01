@@ -1,5 +1,7 @@
 package com.hjk.wangpan.service;
 
+//import com.hjk.wangpan.dto.UserDTO;
+
 import com.hjk.wangpan.pojo.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ public interface UserService {
 
     int addUser(User user);
 
-    int updateUserLoginTime(int id);
+    int isUser(String username);
+
+    int updateUserLoginTime(String username);
 
 }

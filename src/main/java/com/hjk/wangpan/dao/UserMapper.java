@@ -24,7 +24,10 @@ public interface UserMapper {
     @Update("update users set username=#{username},pwd=#{pwd},age=#{age},sex=#{sex},email=#{email},photo=#{photo},usertype=#{usertype},regtime=#{regtime},logintime=#{logintime} where id=#{id}")
     int altUser(User user);
 
-    @Update("update users set logintime=#{logintime} where id=#{id}")
-    int updateUserLoginTime(int id, Date logintime);
+    @Update("update users set logintime=#{logintime} where username=#{username}")
+    int updateUserLoginTime(String username, Date logintime);
+
+    @Select("select * from users where username=#{username}")
+    List<User> getUserUsername(String username);
 
 }
