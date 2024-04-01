@@ -32,8 +32,6 @@ public class SpeedLimiter {
 
     /**
      * @param len send bytes
-     * @author Ethan
-     * @date 2022-11-18
      * @description 计算线程延时
      * sendTime(Ms) = nowTime - lastTime;
      * workTime(Ms) = (totalBytes*1000)/(maxRate*1024)

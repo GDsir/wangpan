@@ -2,10 +2,6 @@ package com.hjk.wangpan.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-//import com.project.evaluate.annotation.RateLimiter;
-//import com.hjk.wangpan.utils.FileUploadUtil;
-//import com.project.evaluate.util.response.ResponseResult;
-//import com.project.evaluate.util.response.ResultCode;
 import com.hjk.wangpan.utils.StatusCode;
 import io.jsonwebtoken.lang.Strings;
 import io.swagger.annotations.Api;
@@ -29,10 +25,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * @author Levi
- * @version 1.0 (created by Spring Boot)
  * @description 文件上传模块，必须保证servlet.multipart.enabled=false，否则无法获取到文件域
- * @since 2022/12/16 15:22
  */
 @RequestMapping("/api/common/file")
 @Controller

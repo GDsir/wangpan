@@ -1,7 +1,6 @@
 package com.hjk.wangpan.dao;
 
 import com.hjk.wangpan.pojo.Passage;
-import com.hjk.wangpan.pojo.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

@@ -2,7 +2,6 @@ package com.hjk.wangpan.dao;
 
 import com.hjk.wangpan.pojo.Comment;
 import org.apache.ibatis.annotations.*;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 

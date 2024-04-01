@@ -1,22 +1,14 @@
 package com.hjk.wangpan.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hjk.wangpan.dao.UserMapper;
 import com.hjk.wangpan.pojo.User;
-//import com.hjk.wangpan.dto.UserDTO;
 import com.hjk.wangpan.service.UserService;
 import com.hjk.wangpan.utils.JwtUtils;
 import com.hjk.wangpan.utils.StatusCode;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

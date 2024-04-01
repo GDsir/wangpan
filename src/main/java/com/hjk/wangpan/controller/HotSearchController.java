@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * 科普文章热搜
  * 学习链接： https://blog.csdn.net/chendasheng/article/details/124938229
- * */
+ */
 @RestController         //注解可以使结果以Json字符串的形式返回给客户端
 @RequestMapping(value = "/api/hotsearch")         //使链接还有一个 /api/
 public class HotSearchController {
@@ -27,18 +26,18 @@ public class HotSearchController {
         JwtUtils jwt = JwtUtils.getInstance();
         Claims claims = jwt.check(token);
         if (claims != null) {
-            try{
+            try {
                 //获取openid
                 String openid = (String) claims.get("openid");
                 hotSearchService.addHotWord(find);
                 //redisUtils.sSet("like:user_"+id,openid);
                 return StatusCode.success("搜索成功！");
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return StatusCode.error(3001, "服务器内部错误：" + e.toString());
             }
-        }else {
+        } else {
             //非法token
             return StatusCode.error(2001, "用户未登录");
         }
@@ -49,18 +48,18 @@ public class HotSearchController {
     public Map<String, Object> giveLike() {
         //获取请求时的token
 
-            try{
-                //获取openid
-                //String openid = (String) claims.get("openid");
+        try {
+            //获取openid
+            //String openid = (String) claims.get("openid");
 
-                hotSearchService.getHotWord();
-                //redisUtils.sSet("like:user_"+id,openid);
-                return StatusCode.success(hotSearchService.getHotWord());
+            hotSearchService.getHotWord();
+            //redisUtils.sSet("like:user_"+id,openid);
+            return StatusCode.success(hotSearchService.getHotWord());
 
-            }catch (Exception e){
-                e.printStackTrace();
-                return StatusCode.error(3001, "服务器内部错误：" + e.toString());
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return StatusCode.error(3001, "服务器内部错误：" + e.toString());
+        }
 
     }
 

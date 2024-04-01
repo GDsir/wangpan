@@ -1,7 +1,6 @@
 package com.hjk.wangpan.exception;
 
 import com.hjk.wangpan.utils.StatusCode;
-import org.springframework.util.StringUtils;
 
 public class BaseException extends RuntimeException {
     private static final long serialVersionUID = 1L;

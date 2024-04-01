@@ -14,8 +14,6 @@ import java.util.Map;
  * error_des 错误描述，一般在设计时定义
  * data 成功数据
  * msg 请求成功 / 请求失败
- *
- * @author Orall
  */
 @Data
 public class StatusCode {
