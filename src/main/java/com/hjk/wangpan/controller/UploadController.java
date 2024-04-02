@@ -2,7 +2,10 @@ package com.hjk.wangpan.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjk.wangpan.service.FileService;
+import com.hjk.wangpan.utils.JwtUtils;
 import com.hjk.wangpan.utils.StatusCode;
+import com.hjk.wangpan.pojo.FileData;
 import io.jsonwebtoken.lang.Strings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,8 +14,11 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.apache.kafka.common.protocol.types.Field;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,6 +75,12 @@ class UploadController {
     @Value("${file.image-prefix}")
     private String imagePrefix;
 
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate;
+
+    @Autowired
+    FileService fileService;
+
     private static void deleteFile(int index, String name, String filePath) {
         for (int i = 0; i < index; i++) {
             File file = new File(filePath, i + "_" + name);
@@ -94,9 +106,20 @@ class UploadController {
         Integer schunks = null; // 总分片数
         String filename = null; // 文件名
         String filePath = this.tempPrePath; // 文件前缀路径
+        String suffix = null;//文件后缀
+        int userLogin = 0;
+        FileData fileData = new FileData();
         BufferedOutputStream os = null; // 输出流
         log.info("初始化变量：filaPath:{}", filePath);
+        //检查登录
 
+        if (redisTemplate.opsForValue().get("userLogin")==null) {
+            log.info("未登录");
+            return StatusCode.error("未登录");
+        }
+        userLogin = (int) redisTemplate.opsForValue().get("userLogin");
+//        log.info(String.valueOf(userLogin));
+        fileData.setUserId(userLogin);
 
         try {
 //            用于处理接受到的文件类
@@ -112,11 +135,11 @@ class UploadController {
             System.out.println(upload.toString());
             log.info("解析request中的文件信息，设置参数：fileSizeMax-{}，requestSizeMax-{}", fileSizeMax, requestSizeMax);
 //            解析这个文件
-            log.info(request.getQueryString());
-            log.info(request.getRequestURI());
-            log.info("qaq" + request.getContentLength());
+//            log.info(request.getQueryString());
+//            log.info(request.getRequestURI());
+//            log.info("qaq" + request.getContentLength());
             List<FileItem> items = upload.parseRequest(request);
-            System.out.println("Qaq" + items.size());
+//            System.out.println("Qaq" + items.size());
 //            取出文件信息
             log.info("---------------------------------------------------------------------------------------------");
             for (FileItem item : items) {
@@ -133,10 +156,15 @@ class UploadController {
 //                    获取文件名
                     if ("name".equals(item.getFieldName())) {
                         filename = item.getString(this.character);
-                        System.out.println("qaq " + filename);
+//                        System.out.println("qaq " + filename);
                     }
 
                     log.info("分片序号：{}，总分片数：{}，文件名：{}", schunk, schunk, filename);
+                    if (filename != null) suffix = filename.substring(filename.lastIndexOf(".") + 1);
+                    log.info("后缀：{}", suffix);
+                    fileData.setFileName(filename);
+                    fileData.setFileSuffix(suffix);
+
                 }
             }
             if (filename == null) {
@@ -222,21 +250,24 @@ class UploadController {
                     //                返回成功信息
                     jsonObject.put("msg", "file upload success");
                     jsonObject.put("filename", tempFile.getAbsoluteFile());
+                    fileService.addFile(fileData);
                     return StatusCode.success(jsonObject);
 //                    return new ResponseResult(ResultCode.SUCCESS, jsonObject);
                 }
             } else {
-                System.out.println("xiaowenhjian");
+//                System.out.println("xiaowenhjian");
                 // 小文件上传完成
                 if (Objects.nonNull(filename)) {
                     File file = new File(tempPrePath, filename);
                     if (file.exists()) {
                         jsonObject.put("msg", "上传成功");
                         jsonObject.put("filename", file.getAbsolutePath());
+                        fileService.addFile(fileData);
                         return StatusCode.success(jsonObject);
 //                        return new ResponseResult(ResultCode.SUCCESS, jsonObject);
                     }
                 }
+
             }
         } catch (Exception e) {
             throw new RuntimeException("upload 模块 失败");

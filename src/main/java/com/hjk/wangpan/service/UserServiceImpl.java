@@ -104,6 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public int isUser(String username) {
         List<User> userList = (List<User>) redisTemplate.opsForValue().get("userlist_" + username);
+
         if (null == userList) {
             try {
                 boolean isLock = tryLock("user_" + username);
@@ -114,11 +115,16 @@ public class UserServiceImpl implements UserService {
                 userList = (List<User>) redisTemplate.opsForValue().get("userlist_" + username);
                 if (null == userList) {
                     userList = userMapper.getUserUsername(username);
-                    Thread.sleep(200);
-                    if (null == userList) {
+//                    log.info(String.valueOf(userList.size()));
+//                    Thread.sleep(200);
+                    if (userList.isEmpty()) {
                         log.info("查无用户名");
                         return 0;
+                    }else {
+                        log.info("qaq1");
                     }
+                }else {
+                    log.info("qaq2");
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -127,7 +133,6 @@ public class UserServiceImpl implements UserService {
             }
         }
         redisTemplate.opsForValue().set("userlist_" + username, userList, 30, TimeUnit.SECONDS);
-
         return 1;
     }
 

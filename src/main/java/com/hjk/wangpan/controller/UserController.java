@@ -7,11 +7,13 @@ import com.hjk.wangpan.utils.JwtUtils;
 import com.hjk.wangpan.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -20,6 +22,8 @@ public class UserController {
     UserService userService;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @GetMapping("/get/user/id/{id}")
     public Map<String, Object> getUserId(@PathVariable int id) {
@@ -27,8 +31,8 @@ public class UserController {
             return StatusCode.error("id输入错误");
         }
         log.info("根据id查询用户");
-        List<User> listid = userService.getUserId(id);
-        return StatusCode.success(listid);
+        List<User> listId = userService.getUserId(id);
+        return StatusCode.success(listId);
     }
 
     @GetMapping("/get/user")
@@ -41,7 +45,9 @@ public class UserController {
     @PostMapping("/post/user")
     public Map<String, Object> addUser(@RequestBody User user) {
         log.info("注册");
+        log.info(user.getUsername());
         if (userService.isUser(user.getUsername()) == 1) {
+
             return StatusCode.error("用户名已经存在");
         }
         int post = userService.addUser(user);
@@ -84,6 +90,7 @@ public class UserController {
                         .setClaim("userid", userLogin.getId())
                         .setClaim("username", userLogin.getUsername())
                         .generateToken();
+                redisTemplate.opsForValue().set("userLogin", userLogin.getId(), 30, TimeUnit.SECONDS);
                 Map<String, String> tmp = new HashMap<>();
                 tmp.put("token", token);
                 //将结果存储下来
